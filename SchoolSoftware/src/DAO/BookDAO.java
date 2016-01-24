@@ -1,5 +1,6 @@
 package DAO;
 
+import Message.BookMessage;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -79,7 +80,7 @@ public class BookDAO {
   	
   	
   	//update Book Information 
-  	public void updateBookInformation(String code, String categoty, String bookname, String address, String author, String press, int total, int keep, int ordered, int borrowed, int available, String comment){
+  	public void updateBookInformation(String code, String category, String bookname, String address, String author, String press, int total, int keep, int ordered, int borrowed, int available, String comment){
           try{
           	System.out.println("Update Book Information:");
           	
@@ -87,7 +88,7 @@ public class BookDAO {
           	sql = conn.prepareStatement("update Book set Category = ? , Bookname = ? , Address = ? , Author = ? , Press = ? , Total = ? , Keep = ? , Ordered = ? , Borrowed = ? , Available = ? , Comment = ? where code = ?");
              
           	sql.setString(1, code);	//please do not start with zero
-          	sql.setString(2, categoty);
+          	sql.setString(2, category);
           	sql.setString(3, bookname);
           	sql.setString(4, address);
           	sql.setString(5, author);
@@ -101,7 +102,8 @@ public class BookDAO {
             sql.executeUpdate();
               
             //output
-            System.out.print("图书编码: "+code);
+            System.out.print("   图书编码: "+code);
+            System.out.print("   图书类别: "+category);
             System.out.print("   图书名称: "+bookname);
             System.out.print("   图书地址: "+address);
             System.out.print("   作者: "+author);
@@ -180,6 +182,7 @@ public class BookDAO {
             while(rs.next()){   //if current statement is not the last one, loop
             	BookMessage bookmessage = new BookMessage();
             	bookmessage.setCode(rs.getString("Code")); 
+            	bookmessage.setCategory(rs.getString("Category"));
             	bookmessage.setBookname(rs.getString("Bookname"));    
             	bookmessage.setAddress(rs.getString("Address"));  
             	bookmessage.setAuthor(rs.getString("Author")); 
@@ -211,6 +214,7 @@ public class BookDAO {
             System.out.println("根据类别查询图书信息！");
             
             String Novel, Essay, Poetry, Finance, Computer, Electron, Physics, Maths, Chemisty, Biology, Lanuage;
+            
             if(novel)	Novel = "novel";
             else Novel = "vanish";
             if(essay)	Essay = "essay";
@@ -235,6 +239,106 @@ public class BookDAO {
             else Lanuage = "vanish";
             
   			sql = conn.prepareStatement("select * from Book where Bookname like '%"+ x +"%' and Category in (?,?,?,?,?,?,?,?,?,?,?)");
+  			sql.setString(1, Novel);
+  			sql.setString(2, Essay);
+  			sql.setString(3, Poetry);
+  			sql.setString(4, Finance);
+  			sql.setString(5, Computer);
+  			sql.setString(6, Electron);
+  			sql.setString(7, Physics);
+  			sql.setString(8, Maths);
+  			sql.setString(9, Chemisty);
+  			sql.setString(10, Biology);
+  			sql.setString(11, Lanuage);
+  			
+  			rs = sql.executeQuery();
+  			
+            while(rs.next()){   //if current statement is not the last one, loop
+            	BookMessage bookmessage = new BookMessage();
+            	bookmessage.setCode(rs.getString("Code")); 
+            	bookmessage.setCategory(rs.getString("Category"));  
+            	bookmessage.setBookname(rs.getString("Bookname"));    
+            	bookmessage.setAddress(rs.getString("Address"));  
+            	bookmessage.setAuthor(rs.getString("Author")); 
+            	bookmessage.setPress(rs.getString("Press")); 
+            	bookmessage.setTotal(rs.getInt("Total")); 
+            	bookmessage.setKeep(rs.getInt("Keep")); 
+            	bookmessage.setOrdered(rs.getInt("Ordered")); 
+            	bookmessage.setBorrowed(rs.getInt("Borrowed")); 
+            	bookmessage.setAvailable(rs.getInt("Available")); 
+            	bookmessage.setComment(rs.getString("Comment")); 
+            	
+            	arraylist.add(bookmessage);
+            	
+            	String a = rs.getString("ID");
+                String b = rs.getString("Code"); 
+                String c = rs.getString("Category");
+                String d = rs.getString("Bookname");
+                String e = rs.getString("Address");  
+                String f = rs.getString("Author"); 
+                String g = rs.getString("Press"); 
+                String h = rs.getString("Total"); 
+                String i = rs.getString("Keep"); 
+                String j = rs.getString("Ordered"); 
+                String k = rs.getString("Borrowed"); 
+                String l = rs.getString("Available"); 
+                String m = rs.getString("Comment"); 
+                
+                //output
+                System.out.print("编号: "+a);
+                System.out.print("   图书编码: "+b);
+                System.out.print("   图书类别: "+c);
+                System.out.print("   图书名称: "+d);
+                System.out.print("   图书地址: "+e);
+                System.out.print("   作者: "+f);
+                System.out.print("   出版社: "+g);
+                System.out.print("   总本数: "+h);
+                System.out.print("   保留本数: "+i);
+                System.out.print("   已预约本数: "+j);
+                System.out.print("   已借本数: "+k);
+                System.out.print("   可借本数: "+l);
+                System.out.println("   备注: "+m);
+           
+            	}
+                
+  			} catch(Exception e){
+              e.printStackTrace();
+  		}
+  		
+		return arraylist;
+    }
+  	
+  	public ArrayList<BookMessage> queryBookCategorybyauthor(String x, boolean novel,boolean essay, boolean poetry, boolean finance, boolean computer, boolean electron, boolean physics, boolean maths, boolean chemisty, boolean biology, boolean lanuage){
+  		ArrayList<BookMessage> arraylist = new ArrayList<>();
+  		try{
+  			System.out.println("Category Query!");
+            System.out.println("根据类别查询图书信息！");
+            
+            String Novel, Essay, Poetry, Finance, Computer, Electron, Physics, Maths, Chemisty, Biology, Lanuage;
+            if(novel)	Novel = "novel";
+            else Novel = "vanish";
+            if(essay)	Essay = "essay";
+            else Essay = "vanish";
+            if(poetry)	Poetry = "poetry";
+            else Poetry = "vanish";
+            if(finance)	Finance = "finance";
+            else Finance = "vanish";
+            if(computer)	Computer = "computer";
+            else Computer = "vanish";
+            if(electron)	Electron = "electron";
+            else Electron = "vanish";
+            if(physics)	Physics = "physics";
+            else Physics = "vanish";
+            if(maths)	Maths = "maths";
+            else Maths = "vanish";
+            if(chemisty)	Chemisty = "chemisty";
+            else Chemisty = "vanish";
+            if(biology)	Biology = "biology";
+            else Biology = "vanish";
+            if(lanuage)	Lanuage = "lanuage";
+            else Lanuage = "vanish";
+            
+  			sql = conn.prepareStatement("select * from Book where Author like '%"+ x +"%' and Category in (?,?,?,?,?,?,?,?,?,?,?)");
   			sql.setString(1, Novel);
   			sql.setString(2, Essay);
   			sql.setString(3, Poetry);
@@ -302,9 +406,7 @@ public class BookDAO {
   		}
   		
 		return arraylist;
-    }
-  	
-  	
+    }	
   	
   	//print Book Information
   	public void printBookInfo(){

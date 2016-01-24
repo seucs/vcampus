@@ -15,7 +15,7 @@ public class Client implements Serializable{
 	private ObjectOutputStream ob_os = null;
 	private ObjectInputStream ob_is = null;
 	
-	private String id;
+	public String id;
 	public  MessageThread messageThread;// 负责接收消息的线程
 
 	public Client() {
@@ -115,19 +115,16 @@ public class Client implements Serializable{
 		}
 	}
 	
-	public void sendBookQuery(String b_name) {
+	public void sendBookQuery(BookQueryMessage m) {
 		if (!isConnected) {
 			System.out.println("客户端还未启动,不能发送消息！");
 			return;
 		}
-		if (b_name == null ) {
-			System.out.println("消息不能为空！");
-			return;
-		}
+		
 		try {
-			
-			Message login_m = new Message("BookQuery", 1, b_name);
-			ob_os.writeObject(login_m);
+	
+			Message m1 = new Message("BookQuery", 0, m);
+			ob_os.writeObject(m1);
 			ob_os.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -172,6 +169,38 @@ public class Client implements Serializable{
 
 	public ObjectInputStream getObjectInputStream() {
 		return ob_is;
+	}
+
+	public void sendPersonalDetailFetch() {
+		if (!isConnected) {
+			System.out.println("客户端还未启动,不能发送消息！");
+			return;
+		}
+		try{
+		Message login_m = new Message("PersonalFetch", 0,null);
+		ob_os.writeObject(login_m);
+		ob_os.flush();
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	public void sendBookupdate(Message message) {
+		// TODO 自动生成的方法存根
+		if (!isConnected) {
+			System.out.println("客户端还未启动,不能发送消息！");
+			return;
+		}
+		
+		try {
+	
+			Message m1 = new Message("BookQuery", 0, message);
+			ob_os.writeObject(m1);
+			ob_os.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	

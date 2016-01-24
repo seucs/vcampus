@@ -5,16 +5,18 @@ import javax.swing.*;
 import CallBack.Libarycallback;
 import Connect.*;
 import PowfulPanel.*;
+
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+
 import Message.*;
 
 public class libraryPanel extends JPanel {
 
-	final HomePanel homePanel = new HomePanel();
+	final HomePanel homePanel ;
 	final PersonalPanel personalPanel = new PersonalPanel();
-	final BookinfPanel bookinfPanel = new BookinfPanel();
+//	final BookinfPanel bookinfPanel = new BookinfPanel();
 	final SearchPanel searchPanel;
 	final ButtonPanel btp = new ButtonPanel(3);
 	public int admin = 1;
@@ -24,6 +26,7 @@ public class libraryPanel extends JPanel {
 
 	public libraryPanel(Client client) {
 		mClient = client;
+		homePanel = new HomePanel(client);
 		searchPanel = new SearchPanel(client);
 		btp.setBounds(0, 0, 900, 40);
 		this.add(btp, new Integer(1));
@@ -44,7 +47,7 @@ public class libraryPanel extends JPanel {
 		homePanel.setLayout(null);
 		this.add(homePanel);
 
-		bookinfPanel.setBackground(Color.white);
+	//	bookinfPanel.setBackground(Color.white);
 		searchPanel.setBackground(Color.white);
 
 		final PButton jb1 = new PButton("首    页");
@@ -79,22 +82,7 @@ public class libraryPanel extends JPanel {
 		});
 
 		// jb2.setBounds(225, 5,225 , 40);
-		jb2.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent e) {
-				resultPanel(bookinfPanel);
-				jb2.setForeground(new Color(35, 164, 231));
-				jb2.setBackground(Color.white);
-				jb1.setForeground(new Color(254, 254, 254));
-				jb1.setBackground(new Color(206, 206, 206));
-				jb3.setForeground(new Color(254, 254, 254));
-				jb3.setBackground(new Color(206, 206, 206));
-				jb4.setForeground(new Color(254, 254, 254));
-				jb4.setBackground(new Color(206, 206, 206));
-				removeThePanelExcept(bookinfPanel);
-				addtop();
-				btp.DoSlide(1);
-			}
-		});
+
 
 		jb3.setBounds(300, 5, 300, 40);
 		jb3.addActionListener(new java.awt.event.ActionListener() {
@@ -111,6 +99,8 @@ public class libraryPanel extends JPanel {
 				removeThePanelExcept(searchPanel);
 				addtop();
 				btp.DoSlide(1);
+//				searchPanel.jsp.setVisible(false);
+//				searchPanel.jsp.setVisible(true);
 
 			}
 		});
@@ -129,7 +119,10 @@ public class libraryPanel extends JPanel {
 				jb2.setBackground(new Color(206, 206, 206));
 				removeThePanelExcept(personalPanel);
 				addtop();
-
+				ArrayList<BorrowMessage> temp = new ArrayList();
+				temp.add(new BorrowMessage());
+				temp.add(new BorrowMessage());
+				personalPanel.showPersonalBorrowPanle(temp);
 				btp.DoSlide(2);
 
 			}
@@ -151,20 +144,17 @@ public class libraryPanel extends JPanel {
 
 			@Override
 			public void getbooklist(ArrayList<BookMessage> mArrayList) {
-
-				for (int i = 0; i < mArrayList.size(); i++) {
-					searchPanel.searchData[i][0] = mArrayList.get(i).getCode();
-					searchPanel.searchData[i][1] = mArrayList.get(i).getBookname();
-					searchPanel.searchData[i][2] = mArrayList.get(i).getAuthor();
-					searchPanel.searchData[i][3] = mArrayList.get(i).getPress();
-					searchPanel.searchData[i][4] = mArrayList.get(i).getTotal() + "";
-					searchPanel.searchData[i][5] = mArrayList.get(i).getAvailable() + "";
-					searchPanel.searchData[i][6] = mArrayList.get(i).getComment();
-					searchPanel.searchData[i][7] = mArrayList.get(i).getAddress();
-
+				System.out.println("zhazha");
+				if(mArrayList.size()==0){
+					JOptionPane.showMessageDialog(null, "没有结果", "不好意思TAT",JOptionPane.CLOSED_OPTION);
 				}
-
-				searchPanel.sousuo();
+				{
+				
+	//
+//					searchPanel.sousuo();
+					searchPanel.showSearchresult(mArrayList);
+				}
+				
 
 			}
 		});
@@ -231,9 +221,6 @@ public class libraryPanel extends JPanel {
 			this.remove(searchPanel);
 		}
 
-		if (bookinfPanel != a) {
-			this.remove(bookinfPanel);
-		}
 
 		this.remove(topPanel);
 
@@ -243,4 +230,5 @@ public class libraryPanel extends JPanel {
 		this.add(topPanel);
 
 	}
+	
 }

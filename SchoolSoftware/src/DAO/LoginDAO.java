@@ -1,11 +1,13 @@
 package DAO;
 
+import Message.LoginMessage;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.ArrayList;
+
 
 public class LoginDAO {
 	private static Connection conn = null;
@@ -21,7 +23,7 @@ public class LoginDAO {
 	}
 	
 	
-	//create table Chat
+	//create table Login
   	public void createTableLogin(){
   		try{
   			System.out.println("Create table Login!");
@@ -170,11 +172,8 @@ public class LoginDAO {
   			System.out.println("Query!");
             System.out.println("查询登陆信息中 "+column+" = "+x+" 的数据！");
             
-  			sql = conn.prepareStatement("select * from Login where "+ column +" = "+ x );
+  			sql = conn.prepareStatement("select * from Login where "+ column +" = ' "+ x +" '");
   			rs = sql.executeQuery();
-  			//rsmd = rs.getMetaData();
-  			
-  			//int columnNum = rsmd.getColumnCount();
   			
             while(rs.next()){   //if current statement is not the last one, loop
             	LoginMessage bookmessage = new LoginMessage();

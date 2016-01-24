@@ -8,8 +8,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import Connect.Server;
+
 import java.io.Closeable;
 import java.lang.*;
+import java.net.BindException;
 import java.util.*;
 
 
@@ -19,8 +22,13 @@ public class libraryadmin extends JFrame{
 	JLabel booknumber=new JLabel("图书编号:");
 	JLabel bookname=new JLabel("书名:");
 	JLabel total =new JLabel("总本数:");
+	JLabel author =new JLabel("作者");
+	JLabel press =new JLabel("出版社");
+	JLabel  classifiction=new JLabel("分类");
+	JLabel  location=new JLabel("存放处");
 	JLabel abletoborrow =new JLabel("可借本数:");
 	JLabel message=new JLabel("请输入一卡通号：");
+	JButton delete_button=new JButton("删除图书");
 	JButton returnbook =new JButton("还书");
 	JButton subscribe =new JButton("预约确认");
 	JButton save=new JButton("保存");	
@@ -29,11 +37,17 @@ public class libraryadmin extends JFrame{
 	JButton cancelhuanshu=new JButton("取消");
 	JButton confirmhuanshu=new JButton("确认");
 	JButton confirmyuyue=new JButton("确认");
+	
 	JTextField BOOKNUMBER =new JTextField();
 	JTextField BOOKNAME =new JTextField();
 	JTextField ABLETOBORROW =new JTextField();
 	JTextField TOTAL =new JTextField();
+	JTextField author_input= new JTextField();
+	JTextField press_input= new JTextField();
+	JTextField class_input= new JTextField();
+	JTextField location_input= new JTextField();
 	JTextField IDinput= new JTextField();
+	
 	//SearchPanel mPanel_searchPanel=new SearchPanel();
 	SearchPanel mPanel_searchPanel=new SearchPanel(null);
 	int tablenumber;
@@ -47,25 +61,38 @@ public class libraryadmin extends JFrame{
 		this.add(bookname);	this.add(booknumber);this.add(total);this.add(abletoborrow);
 		this.add(BOOKNUMBER);add(BOOKNAME);add(ABLETOBORROW);this.add(TOTAL);
 		this.add(subscribe);this.add(save);this.add(cancel);this.add(returnbook);
-		this.add(jsp);
+		this.add(author);this.add(author_input);this.add(press);this.add(press_input);
+		this.add(location);this.add(classifiction);this.add(class_input);this.add(location_input);
+		this.add(jsp);this.add(delete_button);
 		this.setLayout(null);
 		this.setLocationRelativeTo(null);
-		for(int i=0;i<=5;i++)for(int j=0;j<=1;j++)borrowData[i][j]=mPanel_searchPanel.ALLData.get(0)[0][0];
+		//for(int i=0;i<=5;i++)for(int j=0;j<=1;j++)borrowData[i][j]=mPanel_searchPanel.ALLData.get(0)[0][0];
 		borrow.setEnabled(false);
 		this.setBounds(0, 0, 350, 600);
-		booknumber.setBounds(60, 50, 100, 30);
-		bookname.setBounds(60, 90, 100, 30);
-		total.setBounds(60, 130, 100, 30);
-		abletoborrow.setBounds(60, 170, 100, 30);
-		BOOKNUMBER.setBounds(140, 52, 150, 30);
-		BOOKNAME.setBounds(140, 92, 150, 30);
-		TOTAL.setBounds(140, 132, 150, 30);
-		ABLETOBORROW.setBounds(140, 172, 150, 30);
-		jsp.setBounds(60, 210, 230, 200);
-		subscribe.setBounds(60, 420, 100, 30);
-		returnbook.setBounds(190, 420, 100, 30);
-		save.setBounds(60,480, 100, 30);
-		cancel.setBounds(190, 480, 100, 30);
+		booknumber.setBounds(60, 30, 100, 30);
+		bookname.setBounds(60, 70, 100, 30);
+		author.setBounds(60, 110, 100, 30);
+		press.setBounds(60, 150, 100, 30);
+		total.setBounds(60, 190, 100, 30);
+		abletoborrow.setBounds(60, 230, 100, 30);
+		classifiction.setBounds(60, 270, 100, 30);
+		location.setBounds(60, 310, 100, 30);
+		BOOKNUMBER.setBounds(140, 32, 150, 30);
+		BOOKNAME.setBounds(140, 72, 150, 30);
+		author_input.setBounds(140, 112, 150, 30);
+		press_input.setBounds(140, 152, 150, 30);
+		TOTAL.setBounds(140, 192, 150, 30);
+		ABLETOBORROW.setBounds(140, 232, 150, 30);
+		class_input.setBounds(140, 272, 150, 30);
+		location_input.setBounds(140, 312, 150, 30);
+		delete_button.setBounds(125, 530, 100, 20);
+	
+		jsp.setBounds(60, 350, 230, 80);
+		subscribe.setBounds(60, 445, 100, 30);
+		returnbook.setBounds(190, 445, 100, 30);
+		save.setBounds(60,490, 100, 30);
+		cancel.setBounds(190, 490, 100, 30);
+		this.setVisible(true);
 		cancel.addActionListener(new java.awt.event.ActionListener() {
 
 			public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -86,6 +113,15 @@ public class libraryadmin extends JFrame{
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 			
 			save();
+	
+		}
+
+		});
+		delete_button.addActionListener(new java.awt.event.ActionListener() {
+
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+			
+				delete();
 	
 		}
 
@@ -184,20 +220,36 @@ public class libraryadmin extends JFrame{
 	
 	protected void save(){
 			close();
-			mPanel_searchPanel.ALLData.get(mPanel_searchPanel.pagenumber)[tablenumber][0]=BOOKNUMBER.getText();
-			mPanel_searchPanel.ALLData.get(mPanel_searchPanel.pagenumber)[tablenumber][1]=BOOKNAME.getText();	
-			mPanel_searchPanel.ALLData.get(mPanel_searchPanel.pagenumber)[tablenumber][5]=ABLETOBORROW.getText() ;
-			mPanel_searchPanel.ALLData.get(mPanel_searchPanel.pagenumber)[tablenumber][4]=TOTAL.getText();
-			mPanel_searchPanel.searchData[tablenumber][4]=TOTAL.getText();
-			mPanel_searchPanel.searchData[tablenumber][0]=BOOKNUMBER.getText();
-			mPanel_searchPanel.searchData[tablenumber][1]=BOOKNAME.getText();	
-			mPanel_searchPanel.searchData[tablenumber][5]=ABLETOBORROW.getText() ;
+			mPanel_searchPanel.table.setTextTableCell(tablenumber, 5,ABLETOBORROW.getText());
+			mPanel_searchPanel.table.setTextTableCell(tablenumber, 1,BOOKNAME.getText());
+			mPanel_searchPanel.table.setTextTableCell(tablenumber, 0,BOOKNUMBER.getText());
+			mPanel_searchPanel.table.setTextTableCell(tablenumber, 4,TOTAL.getText());
+			mPanel_searchPanel.table.setTextTableCell(tablenumber, 2,author_input.getText());
+			mPanel_searchPanel.table.setTextTableCell(tablenumber, 3,press_input.getText());
+			mPanel_searchPanel.table.setTextTableCell(tablenumber, 6,class_input.getText());
+			mPanel_searchPanel.table.setTextTableCell(tablenumber, 7,location_input.getText());
 			
-			mPanel_searchPanel.SEARCHBOOK.setVisible(false);
-			mPanel_searchPanel.SEARCHBOOK.setVisible(true);
+			mPanel_searchPanel.jsp.setVisible(false);
+			mPanel_searchPanel.jsp.setVisible(true);
 		// TODO 自动生成的方法存根
 		
 	}
+	protected void delete(){
+		close();
+		mPanel_searchPanel.table.setTextTableCell(tablenumber, 5,"");
+		mPanel_searchPanel.table.setTextTableCell(tablenumber, 1,"");
+		mPanel_searchPanel.table.setTextTableCell(tablenumber, 0,"");
+		mPanel_searchPanel.table.setTextTableCell(tablenumber, 4,"");
+		mPanel_searchPanel.table.setTextTableCell(tablenumber, 2,"");
+		mPanel_searchPanel.table.setTextTableCell(tablenumber, 3,"");
+		mPanel_searchPanel.table.setTextTableCell(tablenumber, 6,"");
+		mPanel_searchPanel.table.setTextTableCell(tablenumber, 7,"");
+		
+		mPanel_searchPanel.jsp.setVisible(false);
+		mPanel_searchPanel.jsp.setVisible(true);
+	// TODO 自动生成的方法存根
+	
+}
 
 	public  void setbooknumber(String Booknumber){
 		BOOKNAME.setText(Booknumber);
@@ -220,5 +272,5 @@ public class libraryadmin extends JFrame{
 	{
 		this.setVisible(false);
 	}
-	
+
 }

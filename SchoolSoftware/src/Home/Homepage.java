@@ -8,15 +8,23 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
+import java.util.ArrayList;
+
 import javax.swing.*;
 
 import AdmOffice.Person;
 import AdmOffice.admPanel;
+import CallBack.Libarycallback;
+import CallBack.UpdateCallBack;
 import Chat.AddFriends;
 import Chat.FriendMassage;
 import Chat.mainPanel;
 import Connect.Client;
 import Library.libraryPanel;
+import Message.BookMessage;
+import Message.FriendData;
+import Message.Message;
+import Message.PersonMessage;
 import PowfulPanel.*;
 import Shop.Shoppage;
 
@@ -94,6 +102,8 @@ public class Homepage extends JFrame {
 	public Homepage(Client m) {
 		super("Homepage");
 		mClient = m;
+		//mClient.sendPersonalDetailFetch();
+		pic1.friendsPanel.uid = mClient.id;
 		LIB = new libraryPanel(m);
 		this.setBounds(0, 0, 1100, 700);
 		this.setLocation(200, 100);
@@ -147,24 +157,45 @@ public class Homepage extends JFrame {
 		goChat.setBounds(1000, 670, 100, 30);
 		backgroundlabel.add(goChat);
 		// backgroundlabel.setLayout(null);
+		if(mClient.id.equals("09013112")){
+			Myname = new JLabel("王瑞明");
+			Myname.setBounds(105, 18, 80, 30);
+			Myname.setFont(new Font("微软雅黑", Font.PLAIN, 13));
+			Myname.setForeground(Color.WHITE);
+			backgroundlabel.add(Myname);
 
-		Myname = new JLabel("江义胜");
-		Myname.setBounds(105, 18, 80, 30);
-		Myname.setFont(new Font("微软雅黑", Font.PLAIN, 13));
-		Myname.setForeground(Color.WHITE);
-		backgroundlabel.add(Myname);
+			Mynumber = new JLabel("09013112");
+			Mynumber.setBounds(105, 38, 80, 30);
+			Mynumber.setFont(new Font("微软雅黑", Font.PLAIN, 13));
+			Mynumber.setForeground(Color.WHITE);
+			backgroundlabel.add(Mynumber);
 
-		Mynumber = new JLabel("09013111");
-		Mynumber.setBounds(105, 38, 80, 30);
-		Mynumber.setFont(new Font("微软雅黑", Font.PLAIN, 13));
-		Mynumber.setForeground(Color.WHITE);
-		backgroundlabel.add(Mynumber);
+			Mystatus = new JLabel("图书管理员");
+			Mystatus.setBounds(105, 60, 80, 30);
+			Mystatus.setFont(new Font("微软雅黑", Font.PLAIN, 13));
+			Mystatus.setForeground(Color.WHITE);
+			backgroundlabel.add(Mystatus);
+		}
+		else{
+			Myname = new JLabel("朴智新");
+			Myname.setBounds(105, 18, 80, 30);
+			Myname.setFont(new Font("微软雅黑", Font.PLAIN, 13));
+			Myname.setForeground(Color.WHITE);
+			backgroundlabel.add(Myname);
 
-		Mystatus = new JLabel("图书管理员");
-		Mystatus.setBounds(105, 60, 80, 30);
-		Mystatus.setFont(new Font("微软雅黑", Font.PLAIN, 13));
-		Mystatus.setForeground(Color.WHITE);
-		backgroundlabel.add(Mystatus);
+			Mynumber = new JLabel("09013125");
+			Mynumber.setBounds(105, 38, 80, 30);
+			Mynumber.setFont(new Font("微软雅黑", Font.PLAIN, 13));
+			Mynumber.setForeground(Color.WHITE);
+			backgroundlabel.add(Mynumber);
+
+			Mystatus = new JLabel("");
+			Mystatus.setBounds(105, 60, 80, 30);
+			Mystatus.setFont(new Font("微软雅黑", Font.PLAIN, 13));
+			Mystatus.setForeground(Color.WHITE);
+			backgroundlabel.add(Mystatus);
+		}
+		
 
 		goChat.addActionListener(new java.awt.event.ActionListener() {
 
@@ -237,6 +268,8 @@ public class Homepage extends JFrame {
 				backgroundlabel.remove(person);
 				shop.setBounds(200, 0, 900, 700);
 				backgroundlabel.add(shop);
+				Homepage.this.shop.schPage.jsp.setVisible(false);
+				Homepage.this.shop.schPage.jsp.setVisible(true);
 
 			}
 		});
@@ -294,6 +327,30 @@ public class Homepage extends JFrame {
 			}
 		});
 		this.setVisible(true);
+		mClient.sendPersonalDetailFetch();
+		mClient.messageThread.setUpdatelistener(new UpdateCallBack() {
+			
+			@Override
+			public void UpdateFriendList(Message m) {
+				ArrayList<PersonMessage> Parr =(ArrayList<PersonMessage>) m.getData();
+				ArrayList<FriendData> friendarray = new ArrayList<>();
+				for(PersonMessage p:Parr){
+					friendarray.add(new FriendData(p.getName(),p.getNumber() ,new ImageIcon("save/"+p.getIcon()+".jpg")));
+				}
+				
+				
+				
+				
+				
+				pic1.friendsPanel.showfriends(friendarray, friendarray);
+				
+			}
+			
+			@Override
+			public void UpdateDetial(Message m) {
+				PersonMessage a = (PersonMessage) m.getData();
+			}
+		});
 	}
 
 	void setframe(int i) {

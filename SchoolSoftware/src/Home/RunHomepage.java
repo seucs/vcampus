@@ -12,6 +12,10 @@ public class RunHomepage {
 	static Client client = new Client();
 	static JpanelForm loginFrm;
 
+	public static Client getclient(){
+		return client;
+	}
+	
 	public static void main(String[] args) {
 
 		loginFrm = new JpanelForm(client);
@@ -44,7 +48,7 @@ public class RunHomepage {
 	}
 
 	protected static void signup(JTextField id, JTextField card, final JPanel goal) {
-		if (client.signupServer(9090, "127.0.0.1", id.getText(), card.getText())) {
+		if (client.signupServer(12345, "127.0.0.1", id.getText(), card.getText())) {
 			client.messageThread.setloginListener(new LoginIcallback() {
 
 				@Override
@@ -68,7 +72,7 @@ public class RunHomepage {
 	}
 
 	static void login() {
-		if (client.connectServer(12345, "127.0.0.1", loginFrm.getStuid(), loginFrm.getPass())) {
+		if (client.connectServer(9090, "127.0.0.1", loginFrm.getStuid(), loginFrm.getPass())) {
 			client.messageThread.setloginListener(new LoginIcallback() {
 
 				@Override

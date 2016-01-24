@@ -2,6 +2,7 @@ package Chat;
 
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Label;
 import java.util.ArrayList;
@@ -10,151 +11,312 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+import com.hxtt.b.n;
 
 
 
 public class ChatFrame extends JFrame{
 	
-	ArrayList<ChatName> friendArray = new ArrayList<ChatName>();
-	ArrayList<JLabel> nameArray = new ArrayList<JLabel>();
-	ArrayList<JLabel> picArray = new ArrayList<JLabel>();
-	ArrayList<ImageIcon> imageArray = new ArrayList<ImageIcon>();
-	ArrayList<ChatPanel> chatPanels = new ArrayList<ChatPanel>();
 	
-	int chatnumber =2;
+	int chatnumber =1;
+	String id="";
+
+    JPanel chatFriendPanel=new JPanel();
+    JLayeredPane backJLayeredPane = new JLayeredPane();
+    JLabel shadowLabel =new JLabel();
+	ArrayList<ChatName> FriendButtonArray = new ArrayList<ChatName>();
+	ArrayList<JLabel> NameArray = new ArrayList<JLabel>();
+	ArrayList<JLabel> HeadLabelArray = new ArrayList<JLabel>();
+	ArrayList<ImageIcon> HeadImageArray = new ArrayList<ImageIcon>();
+	ArrayList<ChatPanel> ChatWindows = new ArrayList<ChatPanel>();
+	ArrayList<String> chattingFriendArray = new ArrayList<String>();
 	
-
-
-	JButton close=new JButton("关闭");
-	//JPanel chatfriends=new JPanel();
-	public void addPanel(int m){
-		
-		this.add(chatPanels.get(m));
+	
+	JScrollPane friendScrollPane;
+	JButton closeButton=new JButton("关闭");
+	JLabel backgroundLabel2 = new JLabel();
+	ImageIcon closeButtonpicture = new ImageIcon("images/CloseButton.png");
+	ImageIcon backicon = new ImageIcon("image/deepback.png");
+	ImageIcon friendButtonBackground = new ImageIcon("images/buttonbackground.png");
+	ImageIcon fakeicon = new ImageIcon("");
+	ImageIcon shadowIcon = new ImageIcon("images/shadowLabel.png");
+	
+	public void addPanel(int m)
+	{
 		this.setVisible(true);
+		FriendButtonArray.get(m).setIcon(friendButtonBackground);
 		
-		friendArray.get(m).setBackground(new Color(0xFFD700));
-		
-		for(int i=0;i<friendArray.size();i++){
-			if(m!=i){
-				
-				chatPanels.get(i).setVisible(false);
-				friendArray.get(i).setBackground(new Color(0x8EE5EE));
-	
+		for(int i=0;i<FriendButtonArray.size();i++)
+		{
+			if(m!=i)
+			{
+				ChatWindows.get(i).setBounds(1000, 1000, 700, 500);
+				FriendButtonArray.get(i).setIcon(fakeicon);
 			}
-			
 		}
-		
-		
 	}
 	
 
 	
-	
-	
-//	JPanel Background = new JPanel();
-	JLabel bkgd1= new JLabel();
-//	ImageIcon BG = new ImageIcon("background.jpg");
-	public ChatFrame() {
-		this.setLayout(null);
-		this.add(close);
-		this.setLocation(220,80 );
-		this.setBackground(Color.black);
-		this.setVisible(true);
-		
-//		Background.setLayout(null);
-//		Background.setBounds(0, 0, 794, 560);
-	    
-	    bkgd1.setOpaque(true);
-	    bkgd1.setBackground(Color.white);
-	    bkgd1.setVisible(true);
-	    this.add(bkgd1);
-	    bkgd1.setBounds(200, 492, 429, 38);
-//		bkgd.setIcon(BG);
-//		Background.add(bkgd);
-//		
-//		this.setContentPane(Background);
-		
-		
-		for(int i=0;i<chatnumber;i++){
-			
-			nameArray.add(new JLabel("王瑞明"));
-			picArray.add(new JLabel());
-			imageArray.add(new ImageIcon("images/person3pic.jpg"));
-			
-		}
 
-		
-		chatPanels.add(new ChatPanel("邹东棋","江义胜"));
-		chatPanels.add(new ChatPanel("王瑞明","邹东棋"));
-		chatPanels.add(new ChatPanel("朴智星","王瑞明"));
-		chatPanels.add(new ChatPanel("王华威","朴智星"));
-		chatPanels.add(new ChatPanel("严晟嘉","王华威"));
-		chatPanels.add(new ChatPanel("江义胜","严晟嘉"));
-		chatPanels.add(new ChatPanel("hehe","dfhgri"));
-		chatPanels.add(new ChatPanel("yooooooooooo","dfoihbg"));
-		chatPanels.add(new ChatPanel("bababl","dhfaish"));
-		chatPanels.add(new ChatPanel("gun","dhgiug"));
-	
-		
-		
-		JPanel chatfriends=new JPanel();
-		
-		
-		
-		
-		
 
-		this.add(chatfriends);
-	    chatfriends.setBackground(new Color(0x8EE5EE));
-		chatfriends.setBounds(0, 0, 199, 560);
-		chatfriends.setLayout(null);
+	public ChatFrame(String id) {
 		
-		
-		for(int i=0;i<chatnumber;i++)
+		if(id.equals("09013112"))
 		{
-			friendArray.add(new ChatName(nameArray.get(i), picArray.get(i), imageArray.get(i)));
+			this.setLayout(null);
+			this.add(closeButton);
+			this.setLocation(220,80 );
+			this.setBackground(Color.black);
+			this.setUndecorated(true);
+			this.setVisible(true);
+			this.getContentPane().add(backJLayeredPane);
+			this.getContentPane().setLayout(null);
+				
+
+			backJLayeredPane.setBounds(0, 0, 700, 500);
+			backJLayeredPane.add(shadowLabel, new Integer(3));
+
 			
-			friendArray.get(i).setBounds(0, i*50, 199, 50);
-			chatfriends.add(friendArray.get(i));
+			shadowLabel.setBounds(0, 0, 200, 500);
+			shadowLabel.setIcon(shadowIcon);
 			
-			final int j=i;
-			friendArray.get(i).addActionListener(new java.awt.event.ActionListener() {
+			
+			chatFriendPanel.setPreferredSize(new Dimension(200, 50 * chatnumber + 50));
+			chatFriendPanel.setLayout(null);
+			chatFriendPanel.add(backgroundLabel2);
+			chatFriendPanel.setBackground(new Color(0x9AC0CD));
+			
+			
+			backgroundLabel2.setBounds(0, 0, 200, 500+50*chatnumber);
+			backgroundLabel2.setVisible(true);
+			
+			
+			friendScrollPane = new JScrollPane(chatFriendPanel);
+			this.add(friendScrollPane);
+			friendScrollPane.setBounds(0, 0, 230, 500);
+			friendScrollPane.setVisible(true);
+			friendScrollPane.getVerticalScrollBar().setUnitIncrement(8);
+
+		    
+			backJLayeredPane.add(friendScrollPane,new Integer(1));
+			
+			
+			for(int i=0;i<chatnumber;i++)
+			{
+				NameArray.add(new JLabel());
+				HeadLabelArray.add(new JLabel());	
+			}
+			
+			NameArray.get(0).setText("朴智新");
+//			NameArray.get(1).setText("王瑞明");
+//			NameArray.get(2).setText("朴智新");
+//			NameArray.get(3).setText("严晟嘉");
+//			NameArray.get(4).setText("王华威");
+//			NameArray.get(5).setText("邹东棋");
+//			NameArray.get(6).setText("王瑞明");
+//			NameArray.get(7).setText("朴智新");
+//			NameArray.get(8).setText("严晟嘉");
+//			NameArray.get(9).setText("王华威");
+//			NameArray.get(10).setText("邹东棋");
+//			NameArray.get(11).setText("王瑞明");
+
+			
+			HeadImageArray.add(new ImageIcon("images/person1.jpg"));
+//			HeadImageArray.add(new ImageIcon("images/person2pic.jpg"));
+//			HeadImageArray.add(new ImageIcon("images/person1.jpg"));
+//			HeadImageArray.add(new ImageIcon("images/person3.jpg"));
+//			HeadImageArray.add(new ImageIcon("images/person2.jpg"));
+//			HeadImageArray.add(new ImageIcon("images/person3pic.jpg"));
+//			HeadImageArray.add(new ImageIcon("images/person2pic.jpg"));
+//			HeadImageArray.add(new ImageIcon("images/person1.jpg"));
+//			HeadImageArray.add(new ImageIcon("images/person3.jpg"));
+//			HeadImageArray.add(new ImageIcon("images/person2.jpg"));
+//			HeadImageArray.add(new ImageIcon("images/person3pic.jpg"));
+//			HeadImageArray.add(new ImageIcon("images/person2pic.jpg"));
+
+			
+
+			
+			
+			
+			for(int i=0;i<chatnumber;i++)
+			{
+				
+				ChatWindows.add(new ChatPanel("王瑞明",NameArray.get(i).getText()));
+				backJLayeredPane.add(ChatWindows.get(i),new Integer(2));
+				
+				
+				FriendButtonArray.add(new ChatName(NameArray.get(i), HeadLabelArray.get(i), HeadImageArray.get(i)));
+				
+				FriendButtonArray.get(i).setBounds(0, i*50, 190, 50);
+				chatFriendPanel.add(FriendButtonArray.get(i));
+				
+				final int j=i;
+				FriendButtonArray.get(i).addActionListener(new java.awt.event.ActionListener() {
+
+					public void actionPerformed(java.awt.event.ActionEvent e) {
+					addPanel(j);
+					ChatWindows.get(j).setBounds(200, 0, 500, 500);
+					ChatWindows.get(j).setVisible(true);
+					}
+					
+
+				});
+			}
+			ChatWindows.get(0).setBounds(200, 0, 500, 500);
+			ChatWindows.get(0).setVisible(true);
+
+			
+			this.setSize(700, 500);
+
+			closeButton.setBounds(660, 0, 40, 40);
+			closeButton.setBackground(new Color(0xD6D6D6));
+			closeButton.setBorderPainted(false);
+			closeButton.setIcon(closeButtonpicture);
+//			closeButton.setFocusPainted(false);	
+//			closeButton.setFont(new Font("微软雅黑",Font.PLAIN,18));
+//			closeButton.setForeground(new Color(0xEE4000));
+			
+			closeButton.addActionListener(new java.awt.event.ActionListener() {// jb1事件
 
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					
-				addPanel(j);
-				//hehe();
-				//f(j);
-				chatPanels.get(j).setBounds(200, 0, 594, 560);
-				//chatPanels.get((j+1)%2).setVisible(false);
-				chatPanels.get(j).setVisible(true);
+					closeframe();
 				}
 
 			});
+			
+			
+			// TODO 自动生成的构造函数存根
 		}
-		
+		else{
+			this.setLayout(null);
+			this.add(closeButton);
+			this.setLocation(220,80 );
+			this.setBackground(Color.black);
+			this.setUndecorated(true);
+			this.setVisible(true);
+			this.getContentPane().add(backJLayeredPane);
+			this.getContentPane().setLayout(null);
+				
 
-		
-		this.setSize(785, 560);
+			backJLayeredPane.setBounds(0, 0, 700, 500);
+			backJLayeredPane.add(shadowLabel, new Integer(3));
 
-		close.setBounds(629, 492, 72, 38);
-		close.setBackground(new Color(0xD6D6D6));
-		close.setFocusPainted(false);
-		close.setBorderPainted(false);
-		close.setFont(new Font("微软雅黑",Font.PLAIN,18));
-		close.setForeground(new Color(0xEE4000));
-		
-		close.addActionListener(new java.awt.event.ActionListener() {// jb1事件
+			
+			shadowLabel.setBounds(0, 0, 200, 500);
+			shadowLabel.setIcon(shadowIcon);
+			
+			
+			chatFriendPanel.setPreferredSize(new Dimension(200, 50 * chatnumber + 50));
+			chatFriendPanel.setLayout(null);
+			chatFriendPanel.add(backgroundLabel2);
+			chatFriendPanel.setBackground(new Color(0x9AC0CD));
+			
+			
+			backgroundLabel2.setBounds(0, 0, 200, 500+50*chatnumber);
+			backgroundLabel2.setVisible(true);
+			
+			
+			friendScrollPane = new JScrollPane(chatFriendPanel);
+			this.add(friendScrollPane);
+			friendScrollPane.setBounds(0, 0, 230, 500);
+			friendScrollPane.setVisible(true);
+			friendScrollPane.getVerticalScrollBar().setUnitIncrement(8);
 
-			public void actionPerformed(java.awt.event.ActionEvent e) {
-				closeframe();
+		    
+			backJLayeredPane.add(friendScrollPane,new Integer(1));
+			
+			
+			for(int i=0;i<chatnumber;i++)
+			{
+				NameArray.add(new JLabel());
+				HeadLabelArray.add(new JLabel());	
 			}
+			
+			NameArray.get(0).setText("王瑞明");
+//			NameArray.get(1).setText("王瑞明");
+//			NameArray.get(2).setText("朴智新");
+//			NameArray.get(3).setText("严晟嘉");
+//			NameArray.get(4).setText("王华威");
+//			NameArray.get(5).setText("邹东棋");
+//			NameArray.get(6).setText("王瑞明");
+//			NameArray.get(7).setText("朴智新");
+//			NameArray.get(8).setText("严晟嘉");
+//			NameArray.get(9).setText("王华威");
+//			NameArray.get(10).setText("邹东棋");
+//			NameArray.get(11).setText("王瑞明");
 
-		});
-		
-		
-		// TODO 自动生成的构造函数存根
+			
+			HeadImageArray.add(new ImageIcon("images/person1.jpg"));
+//			HeadImageArray.add(new ImageIcon("images/person2pic.jpg"));
+//			HeadImageArray.add(new ImageIcon("images/person1.jpg"));
+//			HeadImageArray.add(new ImageIcon("images/person3.jpg"));
+//			HeadImageArray.add(new ImageIcon("images/person2.jpg"));
+//			HeadImageArray.add(new ImageIcon("images/person3pic.jpg"));
+//			HeadImageArray.add(new ImageIcon("images/person2pic.jpg"));
+//			HeadImageArray.add(new ImageIcon("images/person1.jpg"));
+//			HeadImageArray.add(new ImageIcon("images/person3.jpg"));
+//			HeadImageArray.add(new ImageIcon("images/person2.jpg"));
+//			HeadImageArray.add(new ImageIcon("images/person3pic.jpg"));
+//			HeadImageArray.add(new ImageIcon("images/person2pic.jpg"));
+
+			
+
+			
+			
+			
+			for(int i=0;i<chatnumber;i++)
+			{
+				
+				ChatWindows.add(new ChatPanel("朴智新",NameArray.get(i).getText()));
+				backJLayeredPane.add(ChatWindows.get(i),new Integer(2));
+				
+				
+				FriendButtonArray.add(new ChatName(NameArray.get(i), HeadLabelArray.get(i), HeadImageArray.get(i)));
+				
+				FriendButtonArray.get(i).setBounds(0, i*50, 190, 50);
+				chatFriendPanel.add(FriendButtonArray.get(i));
+				
+				final int j=i;
+				FriendButtonArray.get(i).addActionListener(new java.awt.event.ActionListener() {
+
+					public void actionPerformed(java.awt.event.ActionEvent e) {
+					addPanel(j);
+					ChatWindows.get(j).setBounds(200, 0, 500, 500);
+					ChatWindows.get(j).setVisible(true);
+					}
+					
+
+				});
+			}
+			ChatWindows.get(0).setBounds(200, 0, 500, 500);
+			ChatWindows.get(0).setVisible(true);
+
+			
+			this.setSize(700, 500);
+
+			closeButton.setBounds(660, 0, 40, 40);
+			closeButton.setBackground(new Color(0xD6D6D6));
+			closeButton.setBorderPainted(false);
+			closeButton.setIcon(closeButtonpicture);
+//			closeButton.setFocusPainted(false);	
+//			closeButton.setFont(new Font("微软雅黑",Font.PLAIN,18));
+//			closeButton.setForeground(new Color(0xEE4000));
+			
+			closeButton.addActionListener(new java.awt.event.ActionListener() {// jb1事件
+
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					closeframe();
+				}
+
+			});
+			
+		}
 	}
 	protected void closeframe() {
 		
@@ -163,9 +325,5 @@ public class ChatFrame extends JFrame{
 		
 	}
 	
-	public static void main(String[] args) {
-		// TODO 自动生成的方法存根
-		new ChatFrame();
-		
-	}
+
 }

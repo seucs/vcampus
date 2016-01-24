@@ -4,8 +4,10 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import CallBack.ChatCallBack;
 import CallBack.Libarycallback;
 import CallBack.LoginIcallback;
+import CallBack.UpdateCallBack;
 import Message.*;
 
 public class MessageThread extends Thread {
@@ -13,6 +15,8 @@ public class MessageThread extends Thread {
 	private Client client;
 	private LoginIcallback loginListener = null;
 	private Libarycallback libaraylistener =null;
+	private UpdateCallBack updatelistener = null;
+	private ChatCallBack chatlistner = null;
 
 	public MessageThread(Client client) {
 		this.client = client;
@@ -29,11 +33,19 @@ public class MessageThread extends Thread {
 		this.libaraylistener = clb;
 	}
 	
+	public void setUpdatelistener(UpdateCallBack clb) {
+		this.updatelistener=clb;
+	}
+	
+	public void setChatCallBack (ChatCallBack clb){
+		this.chatlistner = clb;
+	}
+	
 	public void run() {
 		while (true) {
 			try {
 				Message serverMessage = (Message) ob_is.readObject();
-				System.out.println("nice try");
+				
 //				if(serverMessage.getSender().equals("Server")){
 //					if (serverMessage.getContent().equals("CLOSE")) {
 //						client.closeConnection();
@@ -60,7 +72,7 @@ public class MessageThread extends Thread {
 		switch (m.getType()) {
 		case "Login":
 			
-			loginListener.run((LoginMessage) m.getObj());
+			loginListener.run((LoginMessage) m.getData());
 			
 			
 			break;
@@ -79,12 +91,26 @@ public class MessageThread extends Thread {
 			
 		case "Book":
 		
-			libaraylistener.getbooklist((ArrayList<BookMessage>) m.getObj());
+			libaraylistener.getbooklist((ArrayList<BookMessage>) m.getData());
 		
 			break;
-
+		case "FriendList":
+			
+			updatelistener.UpdateFriendList(m);
+			break;
+		case "Selfmessage":
+			
+			updatelistener.UpdateDetial(m);
+			break;
+		
+		case "Chat":
+			
+			chatlistner.recived((ChatMessage)m.getData());
+		
 		default:
 			break;
 		}
 	}
+
+	
 }

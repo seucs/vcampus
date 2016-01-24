@@ -2,6 +2,10 @@ package DAO;
 import java.sql.*;
 import java.sql.Connection;
 import java.util.*;
+import Message.*;
+import Message.*;
+
+
 
 public class DataAccessObject {
 	//intial database variables
@@ -14,8 +18,13 @@ public class DataAccessObject {
 	private ChatDAO chat = new ChatDAO();
 	private LoginDAO login = new LoginDAO();
 	private ShopDAO shop = new ShopDAO();
-	private TeachDAO teach = new TeachDAO();
 	private CourseDAO course = new CourseDAO();
+	private ExamDAO exam = new ExamDAO();
+	private PersonDAO person = new PersonDAO();
+	private CompetitionDAO competition = new CompetitionDAO();
+	private CompetitorDAO competitor = new CompetitorDAO();
+	private ClassgroupDAO classgroup = new ClassgroupDAO();
+	private FriendDAO friend = new FriendDAO();
 	
 	//getters for DAO objects
 	public BookDAO getBookDAO()
@@ -43,30 +52,48 @@ public class DataAccessObject {
 		return shop;
 	}
 	
-	public TeachDAO getTeachDAO()
-	{
-		return teach;
-	}
-	
 	public CourseDAO getCourseDAO() {
 		return course;
 	}
+	
+	public ExamDAO getExamDAO() {
+		return exam;
+	}
+	
+	public PersonDAO getPersonDAO() {
+		return person;
+	}
+	
+	public CompetitionDAO getCompetitionDAO() {
+		return competition;
+	}
+	
+	public CompetitorDAO getCompetitorDAO() {
+		return competitor;
+	}
+	
+	public ClassgroupDAO getClassgroupDAO() {
+		return classgroup;
+	}
+	
+	public FriendDAO getFriendDAO() {
+		return friend;
+	}
+	
+	
+	
 	
 	//Main Function
     public static void main(String[] args){
     	DataAccessObject dao = new DataAccessObject();
     	dao.getConn();
-    	dao.getBookDAO().dropTableBook();
-    	dao.getBookDAO().createTableBook();
-    	dao.getBookDAO().addBookInformation("0", "maths", "高等数学", "李文正图书馆中文阅览室4", "华罗庚", "高等教育出版社", 100, 10, 40, 30, 20, "");
-    	dao.getBookDAO().addBookInformation("1", "physics", "时间简史", "李文正图书馆中文阅览室4", "霍金", "高等教育出版社", 100, 10, 40, 30, 20, "");
-    	dao.getBookDAO().addBookInformation("2", "computer", "C++", "李文正图书馆中文阅览室4", "ysj", "高等教育出版社", 100, 10, 40, 30, 20, "");
-    	dao.getBookDAO().addBookInformation("3", "computer", "Java", "李文正图书馆中文阅览室4", "pzx", "高等教育出版社", 100, 10, 40, 30, 20, "");
-    	dao.getBookDAO().addBookInformation("4", "lanuage", "大学英语", "李文正图书馆中文阅览室4", "obama", "高等教育出版社", 100, 10, 40, 30, 20, "");
-    	dao.getBookDAO().addBookInformation("5", "novel", "老人与海", "李文正图书馆中文阅览室4", "海明威", "高等教育出版社", 100, 10, 40, 30, 20, "");
-    	dao.getBookDAO().queryBookCategory("", true, false, false, false, false, false, false, false, false, false, false);
-
+    	
+    	
+    	
+    	
+    	
     }
+    
     
 	//Connect Database
     public Connection getConn()
@@ -85,7 +112,7 @@ public class DataAccessObject {
         
         try{
             //data source url1 user password
-            String url1 = "jdbc:Access://database.accdb";
+            String url1 = "jdbc:Access://database/database.accdb";
             String user = "";
             String password = "";
             
@@ -99,8 +126,13 @@ public class DataAccessObject {
             chat.setConn(conn);
             login.setConn(conn);
             shop.setConn(conn);
-            teach.setConn(conn);
-            
+            course.setConn(conn);
+            exam.setConn(conn);
+            person.setConn(conn);
+            competition.setConn(conn);
+            competitor.setConn(conn);
+            classgroup.setConn(conn);
+            friend.setConn(conn);
             
             System.out.println("DataBase Access Linked Successfully!");
         }catch (Exception e){
@@ -178,6 +210,25 @@ public class DataAccessObject {
   		}
   		System.out.println();
       }
+  	
+  	//delete Table Information
+  	public void deleteTableInformation(String table, String column, String x)
+  	{
+  		try{
+  			System.out.println("Delete Table information!");
+  			System.out.println("删除 表 "+table+" 中  "+column+" = "+x+" 的数据！");
+          	
+          	sql = conn.prepareStatement("DELETE FROM "+ table +" WHERE "+ column +" = '"+ x +"'");
+            sql.executeUpdate();
+      
+          } catch(Exception e){
+              e.printStackTrace();
+          }
+          System.out.println();
+  	}
+  	
+  	
+  	
 }
 
 	

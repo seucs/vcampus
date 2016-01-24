@@ -8,6 +8,10 @@ import javax.swing.border.EmptyBorder;
 
 public class mainPanel extends JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7897159627764422938L;
 	public final JButton AddFriend = new JButton();
 	public int aminating = 0;
 	public int flag = 0;
@@ -19,6 +23,10 @@ public class mainPanel extends JPanel {
 	private JScrollPane jsp2;
 	private JScrollBar bar1;
 	private JScrollBar bar2;
+	
+	int chattingFriendNumber = 0;
+	
+	
 
 	public void panel1out() {
 		this.add(jsp1);
@@ -37,11 +45,18 @@ public class mainPanel extends JPanel {
 	public void panel2go() {
 		jsp2.setVisible(false);
 	}
+	
+	
+	
+	public final FriendsPanel friendsPanel = new FriendsPanel();
+	public final FriendsPanel classmatesPanel = new FriendsPanel();
 
+	
+	
 	public mainPanel() {
 
-		int friendsnumber = 100;
-		int classmatesnumber = 50;
+		int friendsnumber = friendsPanel.FriLabelAl.size();
+		int classmatesnumber = classmatesPanel.ClassLabelAl.size();
 
 		final JLabel GroupHead = new JLabel("群组——————————————");
 		final JButton MyClassGroup = new JButton("我的班群");
@@ -64,24 +79,23 @@ public class mainPanel extends JPanel {
 		final ImageIcon serverhead = new ImageIcon("images/Serverhead.jpg");
 		final ImageIcon grouphead = new ImageIcon("images/Classgrouphead.jpg");
 
-		FriendsPanel q1 = new FriendsPanel(friendsnumber);
-		ClassmatesPanel q2 = new ClassmatesPanel(classmatesnumber);
+
 		
 		this.setLayout(null);
 		this.setBounds(1100, 0, 250, 700);
 		this.setBackground(Color.WHITE);
 
-		q1.setPreferredSize(new Dimension(210, 50 * friendsnumber + 100));
-		q2.setPreferredSize(new Dimension(210, 50 * classmatesnumber + 100));
+		friendsPanel.setPreferredSize(new Dimension(210, 50 * friendsnumber + 100));
+		classmatesPanel.setPreferredSize(new Dimension(210, 50 * classmatesnumber + 100));
 
-		jsp1 = new JScrollPane(q1);
+		jsp1 = new JScrollPane(friendsPanel);
 		jsp1.setBounds(17, 160, 230, 400);
 		jsp1.setBackground(new Color(0xBBFFFF));
 
 		bar1 = jsp1.getVerticalScrollBar();
 		bar1.setBackground(Color.white);
 
-		jsp2 = new JScrollPane(q2);
+		jsp2 = new JScrollPane(classmatesPanel);
 		jsp2.setBounds(17, 200, 230, 360);
 		jsp2.setBackground(new Color(0xBBFFFF));
 
@@ -165,6 +179,23 @@ public class mainPanel extends JPanel {
 			}
 
 		});
+		
+		
+//		for (int i=0;i<friendsnumber;i++)
+//		{
+//			final int temp = i;
+//			friendsPanel.friNameButtons.get(i).addActionListener(new java.awt.event.ActionListener() {
+//
+//				public void actionPerformed(java.awt.event.ActionEvent e) {
+//					
+//					chattingFriendArray.add(friendsPanel.friNameButtons.get(temp).getText());
+//				}
+//
+//			});
+//		}
+		
+		
+		
 
 		rightlabel2.setBounds(20, 130, 15, 15);
 		rightlabel2.setBackground(Color.BLACK);

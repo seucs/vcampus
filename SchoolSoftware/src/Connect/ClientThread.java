@@ -4,6 +4,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
+import java.util.ArrayList;
+
+import com.hxtt.a.b;
 
 import DAO.DataAccessObject;
 import Message.*;
@@ -34,32 +37,18 @@ class ClientThread extends Thread implements Serializable {
 			try {
 				Message theMessage = (Message) ob_is.readObject();
 				if (theMessage != null) {
-//					if (chatMessage.getReceiver().equals("CLOSE")) {
-//						ob_is.close();
-//						ob_os.close();
-//						socket.close();
-//					} else {
-//						sever.sendServerMessage(chatMessage);
-//					}
-					if(theMessage.getcode()==1&&theMessage.getType().equals("Login")){
-						LoginMessage temp = (LoginMessage) theMessage.getObj();
+//					
+					if(theMessage.getCode()==1&&theMessage.getType().equals("Login")){
+						LoginMessage temp = (LoginMessage) theMessage.getData();
 //						mData.updateLoginPassword(temp.getStudentnumber(), temp.getPassword());
 					}
 					
-					switch (theMessage.getType()) {
-					case "Book":
-						
-						break;
 					
-					case "Bookborrowed":
-						
-						break;	
+					handleMessage(theMessage);
 					
-					default:
-						break;
-					}
 					
-					sendMessage(null);
+					
+					//sendMessage(null);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -67,6 +56,65 @@ class ClientThread extends Thread implements Serializable {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public void handleMessage(Message m_message){
+		switch (m_message.getType()) {
+		case "BookQuery":
+			
+			BookQueryMessage temp = (BookQueryMessage) m_message.getData();
+			Message result;
+			if(temp.isAuthor()==false){
+				result = new Message("Book", 0,mData.getBookDAO().queryBookCategory(temp.getContent(), temp.isNovel(), temp.isEssay(), temp.isPoetry(), temp.isFinance(), temp.isComputer(), temp.isElectron(), temp.isPhysics(), temp.isMaths(), temp.isChemisty(), temp.isBiology(), temp.isLanuage()));
+
+			}
+			else {
+				result = new Message("Book", 0,mData.getBookDAO().queryBookCategorybyauthor(temp.getContent(), temp.isNovel(), temp.isEssay(), temp.isPoetry(), temp.isFinance(), temp.isComputer(), temp.isElectron(), temp.isPhysics(), temp.isMaths(), temp.isChemisty(), temp.isBiology(), temp.isLanuage()));
+
+			}
+			sendMessage(result);
+			
+			break;
+		
+		case "Bookborrowed":
+			
+			break;	
+		
+		case "PersonalFetch":
+			
+			
+			ArrayList<FriendMessage> tempfriednlist = mData.getFriendDAO().queryFriendMessage("studentnumber", uid);
+			ArrayList<PersonMessage> result2 = new ArrayList<PersonMessage>();
+			for(FriendMessage f:tempfriednlist){
+				result2.add(mData.getPersonDAO().queryPersonMessage_single("number", f.getFriendnumber()));
+			}
+			Message result_message = new Message("FriendList", 0,result2);
+			sendFriendlist(result_message);
+			PersonMessage self = mData.getPersonDAO().queryPersonMessage_single("number", uid);
+			Message result_self = new Message("Selfmessage", 0, self);
+			sendSelfDetial(result_self);
+			
+			break;
+			
+		case "Chat":
+			
+			sever.sendServerMessage(m_message);
+				
+			break;
+			
+		default:
+			break;
+		}
+	}
+	
+	private void sendSelfDetial(Message result_self) {
+		try {
+			ob_os.writeObject(result_self);
+			ob_os.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	public void sendMessage(ChatMessage chatMessage) {
@@ -100,20 +148,28 @@ class ClientThread extends Thread implements Serializable {
 		}
 	}
 	
-	public void sendBookinfo(){
+	public void sendMessage(Message result){
 		try {
-			
-			
-			
-			Message temp = new Message("NEWPW",0,null);
-			
-			ob_os.writeObject(temp);
+						
+						
+			ob_os.writeObject(result);
 			ob_os.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
+	
+	public void sendFriendlist(Message result){
+		
+			try {
+				ob_os.writeObject(result);
+				ob_os.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		
+	}
+	
 	public void closeThread() {
 		try {
 			this.stop();

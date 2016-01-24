@@ -10,12 +10,12 @@ import Message.*;
 public class Server implements Serializable{
 	private ServerSocket serverSocket;
 	private ServerThread serverThread;
-	private ArrayList<ClientThread> clients;
+	public ArrayList<ClientThread> clients;
 	private boolean isStart = false;
 	
 	public static void main(String[] args) {
 		try {
-			new Server().startServer(30, 12345);
+			new Server().startServer(30, 9090);
 		} catch (BindException e) {
 			e.printStackTrace();
 		}
@@ -43,6 +43,25 @@ public class Server implements Serializable{
 		}
 	}
 
+	public void sendServerMessage(Message essage) {
+		if (!isStart) {
+			System.out.println("服务器还未启动,不能发送消息！");
+			return;
+		}
+		if (clients.size() == 0) {
+			System.out.println("没有用户在线,不能发送消息！");
+			return;
+		}
+		
+		for (int i = clients.size() - 1; i >= 0; i--) {
+			ChatMessage temp = (ChatMessage)essage.getData();
+			
+			if (!temp.getSender().equals(clients.get(i).getUid())) {
+				clients.get(i).sendMessage(new Message("Chat", 5, temp));
+			}
+		}
+	}
+	
 	public void closeServer() {
 		try {
 			if (serverThread != null) {

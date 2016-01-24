@@ -1,4 +1,5 @@
 package Connect;
+import DAO.*;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,9 +12,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.StringTokenizer;
 
-import DAO.*;
 import Message.*;
-import Message.Message;
 
 class ServerThread extends Thread {
 	private Server server;
@@ -21,9 +20,11 @@ class ServerThread extends Thread {
 	DataAccessObject mData = new DataAccessObject();
 
 	public ServerThread(Server server, int max) {
+		
 		this.server = server;
 		this.max = max;
 		mData.getConn();
+
 	}
 
 	public void run() {
@@ -36,34 +37,34 @@ class ServerThread extends Thread {
 				ObjectOutputStream ob_os = new ObjectOutputStream(socket.getOutputStream());
 				
 				Message message = (Message) ob_is.readObject();
-				LoginMessage temp = (LoginMessage) message.getObj();
+				LoginMessage temp = (LoginMessage) message.getData();
 				
-//				if(mData.LoginCheck(temp.getPassword(), temp.getStudentnumber())){
-//					ClientThread client = new ClientThread(socket, temp.getStudentnumber(), server, ob_is, ob_os,mData);
-//					server.addClients(client);
-//
-//					if (server.getClientsSize() > max) {
-//						//server.sendServerMessage(new ChatMessage("123", "Server", client.getUid(), "MAX",null));
-//						client.closeThread();
-//						continue;
-//					}
-//					client.start();
-//					client.sendLoginAccess();
-//				}
+				if(mData.getLoginDAO().LoginCheck(temp.getPassword(), temp.getStudentnumber())){
+					ClientThread client = new ClientThread(socket, temp.getStudentnumber(), server, ob_is, ob_os,mData);
+					server.addClients(client);
+
+					if (server.getClientsSize() > max) {
+						//server.sendServerMessage(new ChatMessage("123", "Server", client.getUid(), "MAX",null));
+						client.closeThread();
+						continue;
+					}
+					client.start();
+					client.sendLoginAccess();
+				}
 				
-//				if(mData.SignupCheck(temp.getOnecard(), temp.getStudentnumber())){
-//					ClientThread client = new ClientThread(socket, temp.getStudentnumber(), server, ob_is, ob_os,mData);
-//					server.addClients(client);
-//
-//					if (server.getClientsSize() > max) {
-//						//server.sendServerMessage(new ChatMessage("123", "Server", client.getUid(), "MAX",null));
-//						client.closeThread();
-//						continue;
-//					}
-//					client.start();
-//					client.sendSignupAccess();
-//					
-//				}
+				if(mData.getLoginDAO().SignupCheck(temp.getOnecard(), temp.getStudentnumber())){
+					ClientThread client = new ClientThread(socket, temp.getStudentnumber(), server, ob_is, ob_os,mData);
+					server.addClients(client);
+
+					if (server.getClientsSize() > max) {
+						//server.sendServerMessage(new ChatMessage("123", "Server", client.getUid(), "MAX",null));
+						client.closeThread();
+						continue;
+					}
+					client.start();
+					client.sendSignupAccess();
+					
+				}
 				
 			} catch (IOException e) {
 				e.printStackTrace();

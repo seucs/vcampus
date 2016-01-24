@@ -1,11 +1,15 @@
 package DAO;
 
+import Message.ChatMessage;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.ArrayList;
+
+import Message.ChatMessage;
 
 public class ChatDAO {
 	private static Connection conn = null;
@@ -72,10 +76,9 @@ public class ChatDAO {
   			System.out.println("Query!");
             System.out.println("查询聊天信息中 "+column+" = "+x+" 的数据！");
             
-  			sql = conn.prepareStatement("select * from Chat where "+ column +" = "+ x );
+  			sql = conn.prepareStatement("select * from Chat where "+ column +" = ' "+ x +" ' ");
   			rs = sql.executeQuery();
   			//rsmd = rs.getMetaData();
-  			
   			//int columnNum = rsmd.getColumnCount();
   			
             while(rs.next()){   //if current statement is not the last one, loop
@@ -175,7 +178,7 @@ public class ChatDAO {
   			System.out.println("Query Chat Records by Time Section!");
             System.out.println("查询 发送时间 在 "+ starttime +" ~ "+ endtime +" 之间的聊天记录！");
             
-  			sql = conn.prepareStatement("select * from Chat where Time >= '"+ starttime + "' and Time <= '" + endtime +"' and "+ column +" = '"+ person +"'");
+  			sql = conn.prepareStatement("select * from Chat where Time >= '"+ starttime + "' and Time <= '" + endtime +"' and "+ column +" = ' "+ person +" '");
   			rs = sql.executeQuery();
            
             while(rs.next()){   //if current statement is not the last one, loop

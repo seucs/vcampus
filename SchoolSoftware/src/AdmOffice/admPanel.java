@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Panel;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +20,8 @@ public class admPanel extends JPanel {
 	final AdmStatementPanel admHomePanel = new AdmStatementPanel();
 	final InquirePanel inquirePanel = new InquirePanel();
 	final HandbookPanel handbookPanel = new HandbookPanel();
-	final JPanel contestPanel = new JPanel();
-	final selcourse selectionPanel = new selcourse();
+	final ContestPanel contestPanel = new ContestPanel(inquirePanel);
+	final SelectCoursePanel selectionPanel = new SelectCoursePanel(inquirePanel);
 	
 	
 	JPanel topPanel = new JPanel();
@@ -70,9 +71,6 @@ public class admPanel extends JPanel {
 		handbookPanel.setBackground(Color.white);
 		contestPanel.setBackground(Color.white);
 		selectionPanel.setBackground(Color.white);
-
-		contestPanel.add(new JLabel("学科竞赛信息待添加"));
-//		selectionPanel.add(new JLabel("选课系统待完善"));
   
 		Font font=new Font("微软雅黑", Font.BOLD, 20);
 	    jb1 = new PButton("首    页");
@@ -233,7 +231,14 @@ public class admPanel extends JPanel {
 								centerPanel.remove(currentPanel);// 移除當前面板
 								panel.setBounds(0, 0, centerPanel.getWidth(),centerPanel.getHeight());
 							}
+				
+							
+				
+				
 						}.start();
+						panel.setVisible(false);
+						panel.setVisible(true);
+
 						break;
 					}
 				}

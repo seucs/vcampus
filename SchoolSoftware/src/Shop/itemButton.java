@@ -6,29 +6,24 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class itemButton extends JButton{
+public class ItemButton extends JButton{
 	JLabel pic=new JLabel();
 	JLabel name=new JLabel();
 	JLabel NAME=new JLabel("商品名:");
 	JLabel price=new JLabel();
 	JLabel PRICE=new JLabel("单价:");
-	JLabel describe=new JLabel();
-	JLabel DESCRIBE=new JLabel("商品描述:");
 	String seller="学校";
 	ImageIcon boundary=new ImageIcon("images/Boundary.png");
 	int admin=1;
-	public itemButton(){
+	public ItemButton(){
 		this.setLayout(null);
 		this.setSize(450, 140);
-		this.add(DESCRIBE);
 		this.add(NAME);
 		this.add(name);
 		this.add(price);
 		this.add(PRICE);
-		this.add(describe);
 		this.add(pic);
 		this.setIcon(boundary);
-
 		this.setBackground(Color.white);
 		this.setBounds(0, 0, 450, 140);
 		pic.setBounds(20,20,100,100);
@@ -71,10 +66,6 @@ public class itemButton extends JButton{
 	}
 	public void setPrice(String Price){
 		price.setText(Price);
-		
-	}
-	public void setDescribe(String Describe){
-		describe.setText(Describe);
 		
 	}
 	public void setSeller( String x) {

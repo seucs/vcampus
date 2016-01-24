@@ -22,6 +22,7 @@ public class sellframe extends JFrame{
 	JButton cancel=new JButton("取消");
 	fleamarketPanel flea=new fleamarketPanel();
 	final ImageIcon img=new ImageIcon();
+
 //	boolean admin=false;
 	public sellframe() {
 		this.setVisible(true);
@@ -52,10 +53,10 @@ public class sellframe extends JFrame{
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				int number=0;
 				for(int i=1;i<7;i++)
-					if(flea.item.get(i).name.getText().isEmpty()&&!(flea.item.get(i-1).name.getText().isEmpty()))number=i;
+					//if(flea.my_selling_item.get(i).name.getText().isEmpty()&&!(flea.my_selling_item.get(i-1).name.getText().isEmpty()))number=i;
 				System.out.println(number);
 				flea.setItem(number, editname.getText(), img, editprice.getText());
-				flea.item.get(number).setVisible(false);flea.item.get(number).setVisible(true);
+				flea.my_selling_item.get(number).setVisible(false);flea.my_selling_item.get(number).setVisible(true);
 				close();
 	
 				}
